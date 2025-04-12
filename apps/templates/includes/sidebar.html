@@ -6,12 +6,37 @@
         <div class="sidebar-wrapper">
             <div class="logo">
                 <a href="javascript:void(0)" class="simple-text logo-mini">
-                    CT
+                    PA
                 </a>
                 <a href="javascript:void(0)" class="simple-text logo-normal">
-                    Creative Tim
+                    Portfolia
                 </a>
             </div>
+            <ul class="nav">
+                <li class="{% if 'securities' in segment %} active {% endif %} ">
+                    <a href="/securities.html">
+                        <i class="tim-icons icon-send"></i>
+                        <p>Securities</p>
+                    </a>
+                </li>
+                <li class="{% if 'accounts' in segment %} active {% endif %} ">
+                    <a href="/accounts.html">
+                        <i class="tim-icons icon-bank"></i>
+                        <p>Accounts</p>
+                    </a>
+                </li>
+                <li class="{% if 'reports' in segment %} active {% endif %} ">
+                    <a href="/reports.html">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>Reports</p>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- TODO: Delete from here when project finish to remove all template side bar items-->
+            <div class="logo">
+            </div>
+
             <ul class="nav">
                 <li class="{% if 'index' in segment %} active {% endif %} ">
                     <a href="/">
