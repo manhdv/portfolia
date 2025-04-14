@@ -1,7 +1,17 @@
 type = ['primary', 'info', 'success', 'warning', 'danger'];
 
+const securitiesData = [
+  { id: 1, symbol: "Dakota Rice", name: "Niger", description: "Oud-Turnhout", price: "$36,738" },
+  { id: 2, symbol: "Minerva Hooper", name: "Curaçao", description: "Sinaai-Waas", price: "$23,789" },
+  { id: 3, symbol: "Sage Rodriguez", name: "Netherlands", description: "Baileux", price: "$56,142" },
+  { id: 4, symbol: "Philip Chaney", name: "Korea, South", description: "Overland Park", price: "$38,735" },
+  { id: 5, symbol: "Doris Greene", name: "Malawi", description: "Feldkirchen in Kärnten", price: "$65,542" },
+  { id: 6, symbol: "Mason Porter", name: "Chile", description: "Gloucester", price: "$78,615" },
+  { id: 7, symbol: "Jon Porter", name: "Portugal", description: "Gloucester", price: "$98,615" }
+];
+
 securities = {
-  initSecuritiesPageCharts: function() {
+  initSecuritiesPageCharts: function () {
 
     gradientChartOptionsConfigurationWithTooltipPurple = {
       maintainAspectRatio: false,
@@ -60,7 +70,7 @@ securities = {
     gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
 
     var data = {
-      labels: ['MAR' , 'APR' , 'MAY' , 'JUN' , 'JUL' , 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      labels: ['MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
       datasets: [{
         label: "Data",
         fill: true,
@@ -87,4 +97,35 @@ securities = {
     });
   },
 
+
+
+  populateSecuritiesTable: function () {
+    const tbody = document.getElementById("securitiesTableBody");
+    securitiesData.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+            <td>${row.symbol}</td>
+            <td>${row.name}</td>
+            <td>${row.description}</td>
+            <td class="text-center">${row.price}</td>
+            <td class="td-actions text-right">
+              <button type="button" rel="tooltip" title="" class="btn btn-link" data-id="${row.id}"
+                  data-original-title="Edit Task">
+                  <i class="tim-icons icon-pencil"></i>
+              </button>
+            </td>
+        `;
+      tbody.appendChild(tr);
+    });
+  },
+
+  handleEditButtonClicks: function () {
+    const tbody = document.getElementById("securitiesTableBody");
+    tbody.addEventListener("click", function (e) {
+      const btn = e.target.closest(".btn-link");
+      if (btn && btn.dataset.id) {
+        console.log("Clicked ID:", btn.dataset.id);
+      }
+    });
+  }
 };
