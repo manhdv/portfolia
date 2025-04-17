@@ -4,10 +4,14 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import template
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+from django.shortcuts import render
+
+from .models import Stock
 
 
 @login_required(login_url="/login/")
@@ -42,3 +46,16 @@ def pages(request):
     except:
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
+    
+@login_required(login_url="/login/")
+def securities_view(request):
+    user = request.user
+    stocks = Stock.objects.filter(user=user).order_by('ticker')
+    paginator = Paginator(stocks, 10)  # 10 stocks mỗi page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    print("DEBUG: securities_view called")
+    return render(request, 'home/securities.html', {
+        'page_obj': page_obj
+    })
