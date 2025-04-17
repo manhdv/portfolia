@@ -22,5 +22,8 @@ class Stock(models.Model):
     description = models.TextField(blank=True)
     class Meta:
         unique_together = ('user', 'ticker')
+        indexes = [
+            models.Index(fields=['user', 'ticker']),
+        ]
     def __str__(self):
         return f"{self.ticker} - {self.name}"
