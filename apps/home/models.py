@@ -27,3 +27,15 @@ class Stock(models.Model):
         ]
     def __str__(self):
         return f"{self.ticker} - {self.name}"
+
+
+class StockPrice(models.Model):
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    date = models.DateField()
+    close = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ('stock', 'date')
+        
+    def __str__(self):
+        return f"{self.stock.ticker} - {self.date} - {self.close}"
