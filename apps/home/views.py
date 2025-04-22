@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render , redirect, get_object_or_404
+
 
 from .models import Stock
 
@@ -59,3 +60,25 @@ def securities_view(request):
     return render(request, 'home/securities.html', {
         'page_obj': page_obj
     })
+
+@login_required(login_url="/login/")
+def add_stock(request):
+    if request.method == "POST":
+        ticker = request.POST.get("ticker")
+        name = request.POST.get("name")
+        description = request.POST.get("description", "")
+        Stock.objects.create(user=request.user,ticker=ticker, name=name, description=description)
+    return redirect("securities")  # hoặc tên url của trang list
+
+@login_required(login_url="/login/")
+def edit_stock(request):
+    if request.method == "POST":
+        stock_id = request.POST.get("stock_id")
+        stock = get_object_or_404(Stock, id=stock_id, user=request.user)
+
+        stock.ticker = request.POST.get("ticker")
+        stock.name = request.POST.get("name")
+        stock.description = request.POST.get("description", "")
+        stock.save()
+
+    return redirect("securities")

@@ -12,6 +12,8 @@ urlpatterns = [
     path('', views.index, name='home'),
 
     # Route for securities.html
+    path("securities/add/", views.add_stock, name="add_stock"),
+    path("securities/edit/", views.edit_stock, name="edit_stock"),
     path('securities.html', views.securities_view, name='securities'),
 
     # Matches any html file

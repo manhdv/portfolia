@@ -11,8 +11,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card ">
-                <div class="card-header">
-                    <h4 class="card-title"> Secirities</h4>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h4 class="card-title">Securities</h4>
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addStockModal">
+                    + Add Stock
+                  </button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -85,38 +88,75 @@
 
 <!-- Edit Stock Modal -->
 <div class="modal fade" id="editStockModal" tabindex="-1" role="dialog" aria-labelledby="editStockModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <form id="editStockForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editStockModalLabel">Edit Stock</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'edit_stock' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editStockModalLabel">Edit Stock</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="stock_id" id="stock_id">
+          <div class="form-group">
+            <label for="edit_ticker">Ticker</label>
+            <input type="text" class="form-control" id="edit_ticker" name="ticker" required>
           </div>
-          <div class="modal-body">
-            <input type="hidden" name="stock_id" id="stock_id">
-            <div class="form-group">
-              <label for="ticker">Ticker</label>
-              <input type="text" class="form-control" id="ticker" name="ticker">
-            </div>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" name="name">
-            </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea class="form-control" id="description" name="description"></textarea>
-            </div>
+          <div class="form-group">
+            <label for="edit_name">Name</label>
+            <input type="text" class="form-control" id="edit_name" name="name" required>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+          <div class="form-group">
+            <label for="edit_description">Description</label>
+            <textarea class="form-control" id="edit_description" name="description"></textarea>
           </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
+
+<!-- Add Stock Modal -->
+<div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="addStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'add_stock' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStockModalLabel">Add Stock</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="add_ticker">Ticker</label>
+            <input type="text" class="form-control" id="add_ticker" name="ticker" required>
+          </div>
+          <div class="form-group">
+            <label for="add_name">Name</label>
+            <input type="text" class="form-control" id="add_name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="add_description">Description</label>
+            <textarea class="form-control" id="add_description" name="description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 {% endblock content %}
 
@@ -128,12 +168,13 @@
         // Javascript method's body can be found in assets/js/demos.js
         //securities.handleEditButtonClicks();
         $('.btn-edit').on('click', function () {
-            const button = $(this);
-            $('#stock_id').val(button.data('id'));
-            $('#ticker').val(button.data('ticker'));
-            $('#name').val(button.data('name'));
-            $('#description').val(button.data('description'));
-        });
+        const button = $(this);
+        $('#stock_id').val(button.data('id'));
+        $('#edit_ticker').val(button.data('ticker'));
+        $('#edit_name').val(button.data('name'));
+        $('#edit_description').val(button.data('description'));
+    });
+
     });
 </script>
 
