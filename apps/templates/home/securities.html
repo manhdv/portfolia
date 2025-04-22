@@ -166,15 +166,7 @@
 <script>
     $(document).ready(function () {
         // Javascript method's body can be found in assets/js/demos.js
-        //securities.handleEditButtonClicks();
-        $('.btn-edit').on('click', function () {
-        const button = $(this);
-        $('#stock_id').val(button.data('id'));
-        $('#edit_ticker').val(button.data('ticker'));
-        $('#edit_name').val(button.data('name'));
-        $('#edit_description').val(button.data('description'));
-    });
-
+        securities.handleEditButtonClicks();
     });
 </script>
 
