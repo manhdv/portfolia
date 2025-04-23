@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.shortcuts import render , redirect, get_object_or_404
 
 
-from .models import Stock
+from .models import Stock, UserProfile
 
 
 @login_required(login_url="/login/")
@@ -82,3 +82,15 @@ def edit_stock(request):
         stock.save()
 
     return redirect("securities")
+
+@login_required
+def user_profile_view(request):
+    user = request.user
+    profile = get_object_or_404(UserProfile, user=user)
+    
+    context = {
+        "user": user,
+        "profile": profile
+    }
+    print("DEBUG: user_profile_view called")
+    return render(request, "home/user.html", context)
