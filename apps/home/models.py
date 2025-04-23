@@ -21,7 +21,9 @@ class Stock(models.Model):
     website = models.URLField(blank=True)
     description = models.TextField(blank=True)
     class Meta:
-        unique_together = ('user', 'ticker')
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'ticker'], name='unique_user_ticker')
+        ]
         indexes = [
             models.Index(fields=['user', 'ticker']),
         ]
