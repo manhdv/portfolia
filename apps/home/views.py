@@ -86,8 +86,29 @@ def edit_stock(request):
 @login_required
 def user_profile_view(request):
     user = request.user
-    profile = get_object_or_404(UserProfile, user=user)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     
+    if request.method == 'POST':
+        profile.address = request.POST.get('address', '')
+        profile.city = request.POST.get('city', '')
+        profile.country = request.POST.get('country', '')
+        profile.postal_code = request.POST.get('postal_code', '')
+        profile.about_me = request.POST.get('about_me', '')
+        profile.finhub_api_key = request.POST.get('finhub_api_key', '')
+        profile.alpha_vantage_api_key = request.POST.get('alpha_vantage_api_key', '')
+        profile.stock_source_1_api_key = request.POST.get('stock_source_1_api_key', '')
+        profile.stock_source_2_api_key = request.POST.get('stock_source_2_api_key', '')
+        profile.stock_source_3_api_key = request.POST.get('stock_source_3_api_key', '')
+        profile.save()
+
+        request.user.first_name = request.POST.get('first_name', '')
+        request.user.last_name = request.POST.get('last_name', '')
+        request.user.email = request.POST.get('email', '')
+        request.user.save()
+
+        return redirect('user')  # hoặc bất kỳ route nào bạn đặt tên
+
+
     context = {
         "user": user,
         "profile": profile
