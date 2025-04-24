@@ -52,9 +52,9 @@ class UserProfile(models.Model):
 
     finhub_api_key = models.CharField(max_length=255, blank=True, null=True)
     alpha_vantage_api_key = models.CharField(max_length=255, blank=True, null=True)
-    stock_source_1_api_key = models.CharField(max_length=255, blank=True, null=True)
-    stock_source_2_api_key = models.CharField(max_length=255, blank=True, null=True)
-    stock_source_3_api_key = models.CharField(max_length=255, blank=True, null=True)
+    eodhd_api_key = models.CharField(max_length=255, blank=True, null=True)
+    yahoo_finance_api_key = models.CharField(max_length=255, blank=True, null=True)
+    google_map_api_key = models.CharField(max_length=255, blank=True, null=True)
 
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 

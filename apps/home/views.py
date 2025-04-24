@@ -83,7 +83,7 @@ def edit_stock(request):
 
     return redirect("securities")
 
-@login_required
+@login_required(login_url="/login/")
 def user_profile_view(request):
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -96,9 +96,9 @@ def user_profile_view(request):
         profile.about_me = request.POST.get('about_me', '')
         profile.finhub_api_key = request.POST.get('finhub_api_key', '')
         profile.alpha_vantage_api_key = request.POST.get('alpha_vantage_api_key', '')
-        profile.stock_source_1_api_key = request.POST.get('stock_source_1_api_key', '')
-        profile.stock_source_2_api_key = request.POST.get('stock_source_2_api_key', '')
-        profile.stock_source_3_api_key = request.POST.get('stock_source_3_api_key', '')
+        profile.eodhd_api_key = request.POST.get('eodhd_api_key', '')
+        profile.yahoo_finance_api_key = request.POST.get('yahoo_finance_api_key', '')
+        profile.google_map_api_key = request.POST.get('google_map_api_key', '')
         profile.save()
 
         request.user.first_name = request.POST.get('first_name', '')
