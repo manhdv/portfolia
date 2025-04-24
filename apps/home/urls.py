@@ -16,6 +16,7 @@ urlpatterns = [
     path("securities/edit/", views.edit_stock, name="edit_stock"),
     path('securities.html', views.securities_view, name='securities'),
     path('user.html', views.user_profile_view, name='user'),
+    path("api/search_stock/", views.search_stock_api, name="seach_stock"),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),

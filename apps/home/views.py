@@ -11,8 +11,11 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import render , redirect, get_object_or_404
 
-
+import requests
+from django.views.decorators.http import require_GET
+from django.http import JsonResponse
 from .models import Stock, UserProfile
+from decimal import Decimal, InvalidOperation
 
 
 @login_required(login_url="/login/")
@@ -67,7 +70,12 @@ def add_stock(request):
         ticker = request.POST.get("ticker")
         name = request.POST.get("name")
         description = request.POST.get("description", "")
-        Stock.objects.create(user=request.user,ticker=ticker, name=name, description=description)
+        close_str  = request.POST.get("close", "")
+        try:
+            close = Decimal(close_str)
+        except (InvalidOperation, TypeError):
+            close = 0  # hoặc default nào đó
+        Stock.objects.create(user=request.user,ticker=ticker, name=name, description=description, close=close)
     return redirect("securities")  # hoặc tên url của trang list
 
 @login_required(login_url="/login/")
@@ -115,3 +123,33 @@ def user_profile_view(request):
     }
     print("DEBUG: user_profile_view called")
     return render(request, "home/user.html", context)
+
+@require_GET
+def search_stock_api(request):
+    query = request.GET.get("q", "")
+    if not query:
+        return JsonResponse([], safe=False)
+
+    url = f"https://eodhd.com/api/search/{query}?api_token=67c9ca27830eb1.54218837&fmt=json"
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+    except Exception as e:
+        return JsonResponse([], safe=False)
+
+    # Lọc dữ liệu cần thiết
+    results = []
+    for item in data:
+        results.append({
+            "ticker": item.get("Code"),
+            "exchange": item.get("Exchange"),
+            "name": item.get("Name"),
+            "description": item.get("Type"),
+            "country": item.get("Country"),
+            "isin": item.get("ISIN"),
+            "close": item.get("previousClose"),
+            "date": item.get("previousCloseDate"),
+        })
+
+    return JsonResponse(results, safe=False)

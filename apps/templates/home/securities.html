@@ -32,7 +32,7 @@
                                         Description
                                     </th>
                                     <th class="text-center">
-                                        Prices
+                                        Close
                                     </th>
                                     <th class="text-right">
                                         Actions
@@ -45,7 +45,7 @@
                                     <td>{{ stock.ticker }}</td>
                                     <td>{{ stock.name }}</td>
                                     <td>{{ stock.description|default:"N/A" }}</td>
-                                    <td class="text-center">--</td> <!-- chỗ này sau này có thể gắn giá hoặc chart -->
+                                    <td class="text-center">{{ stock.close }}</td> <!-- chỗ này sau này có thể gắn giá hoặc chart -->
                                     <td class="td-actions text-right">
                                         <button type="button" class="btn btn-link btn-edit"
                                             data-toggle="modal"
@@ -89,7 +89,7 @@
 <!-- Edit Stock Modal -->
 <div class="modal fade" id="editStockModal" tabindex="-1" role="dialog" aria-labelledby="editStockModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark">
       <form method="POST" action="{% url 'edit_stock' %}">
         {% csrf_token %}
         <div class="modal-header">
@@ -125,7 +125,7 @@
 <!-- Add Stock Modal -->
 <div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="addStockModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark">
       <form method="POST" action="{% url 'add_stock' %}">
         {% csrf_token %}
         <div class="modal-header">
@@ -140,12 +140,32 @@
             <input type="text" class="form-control" id="add_ticker" name="ticker" required>
           </div>
           <div class="form-group">
+            <label for="add_exchange">Exchange</label>
+            <input type="text" class="form-control" id="add_exchange" name="exchange"></textarea>
+          </div>
+          <div class="form-group">
             <label for="add_name">Name</label>
             <input type="text" class="form-control" id="add_name" name="name" required>
           </div>
           <div class="form-group">
             <label for="add_description">Description</label>
             <textarea class="form-control" id="add_description" name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="add_country">Country</label>
+            <input type="text" class="form-control" id="add_country" name="country" required>
+          </div>
+          <div class="form-group">
+            <label for="add_isin">ISIN</label>
+            <input type="text" class="form-control" id="add_isin" name="isin" required>
+          </div>
+          <div class="form-group">
+            <label for="add_close">Close</label>
+            <input type="text" class="form-control" id="add_close" name="close" required>
+          </div>
+          <div class="form-group">
+            <label for="add_date">Date</label>
+            <input type="text" class="form-control" id="add_date" name="date" required>
           </div>
         </div>
         <div class="modal-footer">
@@ -167,6 +187,7 @@
     $(document).ready(function () {
         // Javascript method's body can be found in assets/js/demos.js
         securities.handleEditButtonClicks();
+        securities.setupTickerAutocomplete();
     });
 </script>
 
