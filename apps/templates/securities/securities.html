@@ -1,0 +1,202 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Securities {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h4 class="card-title">Securities</h4>
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addStockModal">
+                    + Add Stock
+                  </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table tablesorter " id>
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th>
+                                        Symbol
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th class="text-center">
+                                        Close
+                                    </th>
+                                    <th class="text-right">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stock in page_obj %}
+                                  <tr>
+                                    <td>{{ stock.code }}</td>
+                                    <td>{{ stock.name }}</td>
+                                    <td>{{ stock.description|default:"N/A" }}</td>
+                                    <td class="text-center">{{ stock.close }}</td> <!-- chỗ này sau này có thể gắn giá hoặc chart -->
+                                    <td class="td-actions text-right">
+                                        <button type="button" class="btn btn-link btn-edit"
+                                            data-toggle="modal"
+                                            data-target="#editStockModal"
+                                            data-id="{{ stock.id }}"
+                                            data-code="{{ stock.code }}"
+                                            data-name="{{ stock.name }}"
+                                            data-description="{{ stock.description|default:"" }}">
+                                            <i class="tim-icons icon-pencil"></i>
+                                        </button>
+                                    </td>
+                                  </tr>
+                                {% empty %}
+                                  <tr>
+                                    <td colspan="5" class="text-center">No stocks found.</td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                        </table>
+                        <div class="pagination justify-content-center">
+                            <ul class="pagination">
+                              {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                              {% endif %}
+                          
+                              <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                          
+                              {% if page_obj.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                              {% endif %}
+                            </ul>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Stock Modal -->
+<div class="modal fade" id="editStockModal" tabindex="-1" role="dialog" aria-labelledby="editStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bg-dark">
+      <form method="POST" action="{% url 'edit_stock' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editStockModalLabel">Edit Stock</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="stock_id" id="stock_id">
+          <div class="form-group">
+            <label for="edit_code">Code</label>
+            <input type="text" class="form-control" id="edit_code" name="code" required>
+          </div>
+          <div class="form-group">
+            <label for="edit_name">Name</label>
+            <input type="text" class="form-control" id="edit_name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="edit_description">Description</label>
+            <textarea class="form-control" id="edit_description" name="description"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add Stock Modal -->
+<div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="addStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bg-dark">
+      <form method="POST" action="{% url 'add_stock' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStockModalLabel">Add Stock</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="add_code">Code</label>
+            <input type="text" class="form-control" id="add_code" name="code" required>
+          </div>
+          <div class="form-group">
+            <label for="add_exchange">Exchange</label>
+            <input type="text" class="form-control" id="add_exchange" name="exchange" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_name">Name</label>
+            <input type="text" class="form-control" id="add_name" name="name" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_type">Type</label>
+            <input type="text" class="form-control" id="add_type" name="type" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_description">Description</label>
+            <textarea class="form-control" id="add_description" name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="add_country">Country</label>
+            <input type="text" class="form-control" id="add_country" name="country" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_currency">Currency</label>
+            <input type="text" class="form-control" id="add_currency" name="currency" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_isin">ISIN</label>
+            <input type="text" class="form-control" id="add_isin" name="isin" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_close">Close</label>
+            <input type="text" class="form-control" id="add_close" name="close" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_date">Date</label>
+            <input type="text" class="form-control" id="add_date" name="date" required readonly>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+    $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        securities.handleEditButtonClicks();
+        securities.setupTickerAutocomplete();
+    });
+</script>
+
+{% endblock javascripts %}
