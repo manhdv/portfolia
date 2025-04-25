@@ -3,14 +3,21 @@ securities = {
     $('.btn-edit').on('click', function () {
         const button = $(this);
         $('#stock_id').val(button.data('id'));
-        $('#edit_ticker').val(button.data('ticker'));
+        $('#edit_code').val(button.data('code'));
         $('#edit_name').val(button.data('name'));
+//        $('#edit_exchange').val(button.data('exchange'));
+//        $('#edit_type').val(button.data('type'));
         $('#edit_description').val(button.data('description'));
+//        $('#edit_country').val(button.data('country'));
+//        $('#edit_currency').val(button.data('currency'));
+//        $('#edit_isin').val(button.data('isin'));
+//        $('#edit_close').val(button.data('close'));
+//        $('#edit_date').val(button.data('date'));
     });
   },
 
   setupTickerAutocomplete: function () {
-    const input = document.getElementById("add_ticker");
+    const input = document.getElementById("add_code");
     const dropdown = document.createElement("div");
     dropdown.style.position = "absolute";
     dropdown.style.zIndex = 9999;
@@ -47,14 +54,16 @@ securities = {
       data.forEach(item => {
         const el = document.createElement("a");
         el.className = "list-group-item list-group-item-action";
-        el.textContent = `${item.ticker} - ${item.name}`;
+        el.textContent = `${item.code} - ${item.name}`;
         el.onclick = () => {
           console.log(item);
-          document.getElementById("add_ticker").value = item.ticker;
+          document.getElementById("add_code").value = item.code;
           document.getElementById("add_exchange").value = item.exchange;
           document.getElementById("add_name").value = item.name;
-          document.getElementById("add_description").value = item.description;
+          document.getElementById("add_type").value = item.type;
+          document.getElementById("add_description").value = item.type;
           document.getElementById("add_country").value = item.country;
+          document.getElementById("add_currency").value = item.currency;
           document.getElementById("add_isin").value = item.isin;
           document.getElementById("add_close").value = item.close;
           document.getElementById("add_date").value = item.date;

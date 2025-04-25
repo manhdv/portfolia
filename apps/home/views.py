@@ -17,6 +17,8 @@ from django.http import JsonResponse
 from .models import Stock, UserProfile
 from decimal import Decimal, InvalidOperation
 
+from datetime import datetime
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -54,7 +56,7 @@ def pages(request):
 @login_required(login_url="/login/")
 def securities_view(request):
     user = request.user
-    stocks = Stock.objects.filter(user=user).order_by('ticker')
+    stocks = Stock.objects.filter(user=user).order_by('code')
     paginator = Paginator(stocks, 10)  # 10 stocks mỗi page
 
     page_number = request.GET.get('page')
@@ -67,15 +69,46 @@ def securities_view(request):
 @login_required(login_url="/login/")
 def add_stock(request):
     if request.method == "POST":
-        ticker = request.POST.get("ticker")
+        code = request.POST.get("code")
+        exchange = request.POST.get("exchange")
+        print("DEBUG: exchange =" + exchange)
         name = request.POST.get("name")
+        type = request.POST.get("type")
+        country = request.POST.get("country") 
         description = request.POST.get("description", "")
-        close_str  = request.POST.get("close", "")
+        currency = request.POST.get("currency")
+        isin = request.POST.get("isin")
+        close_str = request.POST.get("close", "")
         try:
             close = Decimal(close_str)
         except (InvalidOperation, TypeError):
-            close = 0  # hoặc default nào đó
-        Stock.objects.create(user=request.user,ticker=ticker, name=name, description=description, close=close)
+            close = 0  # default
+
+        date_str = request.POST.get("date", "")
+        print("DEBUG: date_str =" + date_str)
+
+        try:
+            date = datetime.strptime(date_str, "%Y-%m-%d").date()  # Đảm bảo đúng định dạng ngày
+        except ValueError:
+            date = datetime.today()  # Nếu không thể chuyển đổi thì gán None, có thể set giá trị mặc định ở DB
+        
+        try:
+            Stock.objects.create(
+                user=request.user,
+                code=code,
+                exchange=exchange,
+                name=name,
+                type=type,
+                description=description,
+                country=country,
+                currency=currency,
+                isin=isin,
+                close=close,
+                date=date
+                )
+        except Exception as e:
+            print("CREATE ERROR:", e)
+            return redirect("securities")
     return redirect("securities")  # hoặc tên url của trang list
 
 @login_required(login_url="/login/")
@@ -84,7 +117,7 @@ def edit_stock(request):
         stock_id = request.POST.get("stock_id")
         stock = get_object_or_404(Stock, id=stock_id, user=request.user)
 
-        stock.ticker = request.POST.get("ticker")
+        stock.code = request.POST.get("code")
         stock.name = request.POST.get("name")
         stock.description = request.POST.get("description", "")
         stock.save()
@@ -142,11 +175,12 @@ def search_stock_api(request):
     results = []
     for item in data:
         results.append({
-            "ticker": item.get("Code"),
+            "code": item.get("Code"),
             "exchange": item.get("Exchange"),
             "name": item.get("Name"),
-            "description": item.get("Type"),
+            "type": item.get("Type"),
             "country": item.get("Country"),
+            "currency": item.get("Currency"),
             "isin": item.get("ISIN"),
             "close": item.get("previousClose"),
             "date": item.get("previousCloseDate"),

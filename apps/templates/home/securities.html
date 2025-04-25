@@ -42,7 +42,7 @@
                             <tbody>
                                 {% for stock in page_obj %}
                                   <tr>
-                                    <td>{{ stock.ticker }}</td>
+                                    <td>{{ stock.code }}</td>
                                     <td>{{ stock.name }}</td>
                                     <td>{{ stock.description|default:"N/A" }}</td>
                                     <td class="text-center">{{ stock.close }}</td> <!-- chỗ này sau này có thể gắn giá hoặc chart -->
@@ -51,7 +51,7 @@
                                             data-toggle="modal"
                                             data-target="#editStockModal"
                                             data-id="{{ stock.id }}"
-                                            data-ticker="{{ stock.ticker }}"
+                                            data-code="{{ stock.code }}"
                                             data-name="{{ stock.name }}"
                                             data-description="{{ stock.description|default:"" }}">
                                             <i class="tim-icons icon-pencil"></i>
@@ -101,8 +101,8 @@
         <div class="modal-body">
           <input type="hidden" name="stock_id" id="stock_id">
           <div class="form-group">
-            <label for="edit_ticker">Ticker</label>
-            <input type="text" class="form-control" id="edit_ticker" name="ticker" required>
+            <label for="edit_code">Code</label>
+            <input type="text" class="form-control" id="edit_code" name="code" required>
           </div>
           <div class="form-group">
             <label for="edit_name">Name</label>
@@ -136,16 +136,20 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="add_ticker">Ticker</label>
-            <input type="text" class="form-control" id="add_ticker" name="ticker" required>
+            <label for="add_code">Code</label>
+            <input type="text" class="form-control" id="add_code" name="code" required>
           </div>
           <div class="form-group">
             <label for="add_exchange">Exchange</label>
-            <input type="text" class="form-control" id="add_exchange" name="exchange"></textarea>
+            <input type="text" class="form-control" id="add_exchange" name="exchange" required readonly>
           </div>
           <div class="form-group">
             <label for="add_name">Name</label>
-            <input type="text" class="form-control" id="add_name" name="name" required>
+            <input type="text" class="form-control" id="add_name" name="name" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_type">Type</label>
+            <input type="text" class="form-control" id="add_type" name="type" required readonly>
           </div>
           <div class="form-group">
             <label for="add_description">Description</label>
@@ -153,19 +157,23 @@
           </div>
           <div class="form-group">
             <label for="add_country">Country</label>
-            <input type="text" class="form-control" id="add_country" name="country" required>
+            <input type="text" class="form-control" id="add_country" name="country" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="add_currency">Currency</label>
+            <input type="text" class="form-control" id="add_currency" name="currency" required readonly>
           </div>
           <div class="form-group">
             <label for="add_isin">ISIN</label>
-            <input type="text" class="form-control" id="add_isin" name="isin" required>
+            <input type="text" class="form-control" id="add_isin" name="isin" required readonly>
           </div>
           <div class="form-group">
             <label for="add_close">Close</label>
-            <input type="text" class="form-control" id="add_close" name="close" required>
+            <input type="text" class="form-control" id="add_close" name="close" required readonly>
           </div>
           <div class="form-group">
             <label for="add_date">Date</label>
-            <input type="text" class="form-control" id="add_date" name="date" required>
+            <input type="text" class="form-control" id="add_date" name="date" required readonly>
           </div>
         </div>
         <div class="modal-footer">

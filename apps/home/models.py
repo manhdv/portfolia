@@ -11,41 +11,49 @@ from datetime import date
 
 class Stock(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stocks')
-    ticker = models.CharField(max_length=10)
+    code = models.CharField(max_length=10)
     exchange = models.CharField(max_length=20)
     name = models.CharField(max_length=255)
-    industry = models.CharField(max_length=100, blank=True)
-    sector = models.CharField(max_length=100, blank=True)
+    type = models.CharField(max_length=255, blank=True)  
     country = models.CharField(max_length=50, default='VN')
     currency = models.CharField(max_length=50, default='VND')
     isin = models.CharField(max_length=20, blank=True)
-    close = models.DecimalField(max_digits=16, decimal_places=4, default=0)
-    close_date = models.DateField(default=date.today)
+    close = models.DecimalField(max_digits=16, decimal_places=2, default=0)
+    date = models.DateField(default=date.today)
     is_active = models.BooleanField(default=True)
 
+    # metadata
+    industry = models.CharField(max_length=100, blank=True)
+    sector = models.CharField(max_length=100, blank=True)
     website = models.URLField(blank=True)
     description = models.TextField(blank=True)
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user', 'ticker'], name='unique_user_ticker')
+            models.UniqueConstraint(fields=['user', 'code'], name='unique_user_code')
         ]
         indexes = [
-            models.Index(fields=['user', 'ticker']),
+            models.Index(fields=['user', 'code']),
         ]
     def __str__(self):
-        return f"{self.ticker} - {self.name}"
+        return f"{self.code} - {self.name}"
 
 
 class StockPrice(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
-    date = models.DateField()
-    close = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(default=date.today)
+    open = models.DecimalField(max_digits=16, decimal_places=2, default=0)
+    high = models.DecimalField(max_digits=16, decimal_places=2, default=0)
+    low = models.DecimalField(max_digits=16, decimal_places=2,default=0)
+    close = models.DecimalField(max_digits=16, decimal_places=2)
+    adjusted_close = models.DecimalField(max_digits=16, decimal_places=2,default=0)
+    volume = models.BigIntegerField(default=0)
 
     class Meta:
-        unique_together = ('stock', 'date')
-
+        constraints = [
+            models.UniqueConstraint(fields=['stock', 'date'], name='unique_stock_date')
+        ]
     def __str__(self):
-        return f"{self.stock.ticker} - {self.date} - {self.close}"
+        return f"{self.stock.code} - {self.date} - {self.close}"
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Tham chiếu đến User
