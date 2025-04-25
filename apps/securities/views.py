@@ -28,7 +28,7 @@ def securities_view(request):
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     return render(request, 'securities/securities.html', {
-        'page_obj': page_obj
+        'page_obj': page_obj, 'segment': 'securities'
     })
 
 @login_required(login_url="/login/")
