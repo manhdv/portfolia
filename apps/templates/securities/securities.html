@@ -29,10 +29,16 @@
                                         Name
                                     </th>
                                     <th>
-                                        Description
+                                        Type
+                                    </th>                                    
+                                    <th class="text-right">
+                                        Exchange
                                     </th>
-                                    <th class="text-center">
+                                    <th class="text-right">
                                         Close
+                                    </th>
+                                    <th class="text-right">
+                                      Currency
                                     </th>
                                     <th class="text-right">
                                         Actions
@@ -44,8 +50,10 @@
                                   <tr>
                                     <td>{{ stock.code }}</td>
                                     <td>{{ stock.name }}</td>
-                                    <td>{{ stock.description|default:"N/A" }}</td>
-                                    <td class="text-center">{{ stock.close }}</td> <!-- chỗ này sau này có thể gắn giá hoặc chart -->
+                                    <td>{{ stock.type|default:"N/A" }}</td>
+                                    <td class="text-right">{{ stock.exchange }}</td>
+                                    <td class="text-right">{{ stock.close }}</td>
+                                    <td class="text-right">{{ stock.currency }}</td>
                                     <td class="td-actions text-right">
                                         <button type="button" class="btn btn-link btn-edit"
                                             data-toggle="modal"
