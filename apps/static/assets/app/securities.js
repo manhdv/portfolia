@@ -73,4 +73,17 @@ securities = {
       });
     }
   },
+
+    updateModalTheme: function(modal) {
+      const isLight = document.body.classList.contains("white-content");
+      const $modalContent = $(modal).find('.modal-content');
+
+      //$modalContent.removeClass('bg-dark bg-light text-white text-dark');
+
+      if (isLight) {
+          //$modalContent.addClass('bg-light text-dark');
+      } else {
+          $modalContent.addClass('bg-dark');
+      }
+  },
 };

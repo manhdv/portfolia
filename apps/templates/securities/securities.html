@@ -100,7 +100,7 @@
 <!-- Edit Stock Modal -->
 <div class="modal fade" id="editStockModal" tabindex="-1" role="dialog" aria-labelledby="editStockModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content bg-dark">
+    <div class="modal-content">
       <form method="POST" action="{% url 'securities_edit' %}">
         {% csrf_token %}
         <div class="modal-header">
@@ -136,7 +136,7 @@
 <!-- Add Stock Modal -->
 <div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="addStockModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content bg-dark">
+    <div class="modal-content">
       <form method="POST" action="{% url 'securities_add' %}">
         {% csrf_token %}
         <div class="modal-header">
@@ -204,9 +204,12 @@
 
 <script>
     $(document).ready(function () {
-        // Javascript method's body can be found in assets/js/demos.js
+        // Javascript method's body can be found in assets/js/securities.js
         securities.handleEditButtonClicks();
         securities.setupTickerAutocomplete();
+        $(document).on('show.bs.modal', '.modal', function () {
+          securities.updateModalTheme(this);
+        });
     });
 </script>
 
