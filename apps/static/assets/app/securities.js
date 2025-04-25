@@ -32,7 +32,7 @@ securities = {
       if (q.length < 2) return dropdown.innerHTML = "";
 
       timeout = setTimeout(() => {
-        fetch(`/api/search_stock/?q=${q}`)
+        fetch(`securities/search/?q=${q}`)
           .then(r => r.json())
           .then(data => showSuggestions(data, input));
       }, 300);

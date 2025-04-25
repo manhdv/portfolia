@@ -19,14 +19,15 @@ from .models import Securities
 
 @login_required(login_url="/login/")
 def securities_view(request):
+    print("DEBUG: securities_view called")
+
     user = request.user
     stocks = Securities.objects.filter(user=user).order_by('code')
     paginator = Paginator(stocks, 10)  # 10 stocks mỗi page
 
-    page_number = request.GET.get('page')
+    page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
-    print("DEBUG: securities_view called")
-    return render(request, 'home/securities.html', {
+    return render(request, 'securities/securities.html', {
         'page_obj': page_obj
     })
 
@@ -72,8 +73,8 @@ def securities_add(request):
                 )
         except Exception as e:
             print("CREATE ERROR:", e)
-            return redirect("securities")
-    return redirect("securities")  # hoặc tên url của trang list
+            return redirect("/securities/")
+    return redirect("/securities/")  # hoặc tên url của trang list
 
 @login_required(login_url="/login/")
 def securities_edit(request):
@@ -86,7 +87,7 @@ def securities_edit(request):
         stock.description = request.POST.get("description", "")
         stock.save()
 
-    return redirect("securities")
+    return redirect("/securities/")
 
 @require_GET
 def securities_search(request):
@@ -119,27 +120,9 @@ def securities_search(request):
 
     return JsonResponse(results, safe=False)
 
-@login_required(login_url="/login/")
-def pages(request):
-    context = {}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
-    try:
 
-        load_template = request.path.split('/')[-1]
-
-        if load_template == 'admin':
-            return HttpResponseRedirect(reverse('admin:index'))
-        context['segment'] = load_template
-
-        html_template = loader.get_template('home/' + load_template)
-        return HttpResponse(html_template.render(context, request))
-
-    except template.TemplateDoesNotExist:
-
-        html_template = loader.get_template('home/page-404.html')
-        return HttpResponse(html_template.render(context, request))
-
-    except:
-        html_template = loader.get_template('home/page-500.html')
-        return HttpResponse(html_template.render(context, request))
+# Delete stock view
+def securities_delete(request, id):
+    stock = get_object_or_404(Securities, id=id)
+    stock.delete()
+    return redirect('/securities/')

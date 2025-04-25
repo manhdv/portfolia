@@ -56,6 +56,9 @@
                                             data-description="{{ stock.description|default:"" }}">
                                             <i class="tim-icons icon-pencil"></i>
                                         </button>
+                                        <a href="{% url 'securities_delete' stock.id %}" class="btn btn-link btn-danger" onclick="return confirm('Are you sure you want to delete this stock?');">
+                                          <i class="tim-icons icon-simple-remove"></i>
+                                        </a>
                                     </td>
                                   </tr>
                                 {% empty %}
@@ -90,7 +93,7 @@
 <div class="modal fade" id="editStockModal" tabindex="-1" role="dialog" aria-labelledby="editStockModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content bg-dark">
-      <form method="POST" action="{% url 'edit_stock' %}">
+      <form method="POST" action="{% url 'securities_edit' %}">
         {% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="editStockModalLabel">Edit Stock</h5>
@@ -126,7 +129,7 @@
 <div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="addStockModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content bg-dark">
-      <form method="POST" action="{% url 'add_stock' %}">
+      <form method="POST" action="{% url 'securities_add' %}">
         {% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="addStockModalLabel">Add Stock</h5>
